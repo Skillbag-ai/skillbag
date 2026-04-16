@@ -1,4 +1,4 @@
-SkillBag v0.1.0
+SkillBag v0.1.1
 
 SkillBag defines how an agent discovers, installs, and applies workspace
 skills. It extends the base per-skill format with dependency, installation,
@@ -150,6 +150,18 @@ Rules:
 - `#run/always` MAY be disabled by user context
 - if not disabled, `#run/always` skills SHOULD run even when they are not
   explicitly requested
+- `#run/last` means the skill SHOULD run after all other applicable non-
+  `#run/last` skills
+- `#run/last` MAY be disabled by user context
+- if multiple `#run/last` skills are applicable, they SHOULD run after all
+  other applicable skills in ascending canonical skill name order
+- `#use/<skill-name>` means the named skill SHOULD be considered and used in
+  combination when the tagged skill is used
+- `<skill-name>` in `#use/<skill-name>` MUST be a canonical hyphenated skill
+  name
+- `#use/<skill-name>` does not install missing skills by itself
+- if the referenced skill is unavailable or disabled, ignore the tag without
+  failing
 
 ## SkillBag Extensions
 

@@ -176,6 +176,30 @@ The canonical hyphenated name is still used in:
 - `SKILL.md`
 - dependency declarations
 
+## Tags
+
+Skill descriptions may include standardized tags directly in the description
+text.
+
+Current tags:
+
+- `#run/always`: the skill should run even when not explicitly requested,
+  unless user context disables it
+- `#run/last`: the skill should run after other applicable non-`#run/last`
+  skills and is useful for final validation or reporting
+- `#use/<skill-name>`: when the tagged skill is used, the named companion
+  skill should also be considered and used in combination if it is available
+
+If multiple `#run/last` skills are applicable, they should run after other
+skills in ascending canonical skill name order.
+
+`#use/<skill-name>` uses the canonical hyphenated skill name and does not
+install missing skills by itself.
+
+Example: a transcription skill may include `#use/skillbag-long-task` so large
+batches such as hundreds of audio files are handled in continuation-sized
+chunks instead of one oversized response.
+
 ## Repository Layout
 
 This repository contains the core specification and repository-level docs:
