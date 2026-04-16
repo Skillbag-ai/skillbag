@@ -13,6 +13,8 @@ The format is intentionally simple while the project remains a draft.
   `#run/last` skills.
 - Clarified that user context may add or remove tags for installed skills,
   including the `#run/*` tags, without editing the skill files.
+- Required installer-managed `SKILLS.md` catalogs to remain sorted in
+  ascending alphabetical order by skill name.
 - Documented standardized description tags in the README, including
   `#run/always`, `#run/last`, and `#use/<skill-name>`, with a long-task
   example.

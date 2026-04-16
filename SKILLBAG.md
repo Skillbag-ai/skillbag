@@ -46,7 +46,7 @@ Rules:
 - each skill MUST appear exactly once
 - each listed skill MUST exist at `.skills/<name>/`
 - each valid skill directory under `.skills/` MUST be listed
-- lines SHOULD be sorted by `<name>`
+- lines MUST be sorted by `<name>` in ascending alphabetical order
 
 A skill lives at `.skills/<skill-name>/SKILL.md`.
 
@@ -222,7 +222,7 @@ Installation is lazy by default.
   requests reinstall.
 - The agent MAY create `.skills/` on first install.
 - If `.skills/` exists, `.skills/SKILLS.md` MUST stay in sync with local
-  skills.
+  skills and remain sorted by skill name in ascending alphabetical order.
 - During initial setup, the installer MUST inspect `CONTEXT.md` for
   `dependencies` and install them first when present.
 - `CONTEXT.md` and `USER_CONTEXT.md` are optional and need not exist.
@@ -280,7 +280,7 @@ optional:
 - Install each requested skill as exactly one directory at `.skills/<name>/`.
 - If `.skills/<name>/` exists and `upgrade=false`, leave it unchanged.
 - If `.skills/<name>/` has local edits, do not overwrite it without explicit user instruction.
-- After any successful install or upgrade, regenerate local `.skills/SKILLS.md` so it exactly matches local `.skills/`.
+- After any successful install or upgrade, regenerate local `.skills/SKILLS.md` in ascending alphabetical order by skill name so it exactly matches local `.skills/`.
 - If `persist-nonsecret-parameters=true` and no higher-precedence rule forbids it, resolved non-secret parameters MAY be written to `USER_CONTEXT.md`.
 - Secrets, tokens, passwords, and private keys MUST NOT be written to `USER_CONTEXT.md` automatically.
 ````
