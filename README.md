@@ -150,10 +150,11 @@ of truth.
 
 ## Installation
 
-Simply copy the `SKILLBAG.md` into your project's root directory. Alternatively, get the latest by running this command from within your directory:
+Simply copy the `SKILLBAG.md` into your project's root directory. Alternatively,
+fetch the latest and save it directly as `SKILLBAG.md`:
 
 ```bash
-curl https://skillbag.md -o SKILLBAG.md
+curl -fsSL https://skillbag.md -o SKILLBAG.md
 ```
 
 ## Runtime Invocation

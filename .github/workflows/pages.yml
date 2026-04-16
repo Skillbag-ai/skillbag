@@ -32,7 +32,7 @@ jobs:
         run: |
           mkdir -p _site
           cp SKILLBAG.md _site/SKILLBAG.md
-          cp SKILLBAG.md _site/index.md
+          cp SKILLBAG.md _site/index.html
           touch _site/.nojekyll
 
       - name: Upload Pages artifact
