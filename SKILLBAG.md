@@ -1,4 +1,4 @@
-SkillBag
+SkillBag v0.1.0
 
 SkillBag defines how an agent discovers, installs, and applies workspace
 skills. It extends the base per-skill format with dependency, installation,
