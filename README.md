@@ -148,6 +148,14 @@ This model is intended for local-directory agent workflows, where the agent is
 working against a real filesystem and the workspace itself should be the source
 of truth.
 
+## Installation
+
+Simply copy the `SKILLBAG.md` into your project's root directory. Alternatively, get the latest by running this command from within your directory:
+
+```bash
+curl https://skillbag.md -o SKILLBAG.md
+```
+
 ## Runtime Invocation
 
 Skill names are canonical and hyphenated, for example:

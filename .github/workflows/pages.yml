@@ -28,22 +28,12 @@ jobs:
       - name: Configure Pages
         uses: actions/configure-pages@v5
 
-      - name: Mirror SKILLBAG.md to index.md
+      - name: Prepare raw Pages artifact
         run: |
-          mkdir -p .site-src
-          cat > .site-src/index.md <<'EOF'
-          ---
-          title: SkillBag
-          ---
-          
-          EOF
-          cat SKILLBAG.md >> .site-src/index.md
-
-      - name: Build Jekyll site
-        uses: actions/jekyll-build-pages@v1
-        with:
-          source: .site-src
-          destination: ./_site
+          mkdir -p _site
+          cp SKILLBAG.md _site/SKILLBAG.md
+          cp SKILLBAG.md _site/index.md
+          touch _site/.nojekyll
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v4
