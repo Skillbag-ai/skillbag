@@ -193,6 +193,10 @@ Current tags:
 If multiple `#run/last` skills are applicable, they should run after other
 skills in ascending canonical skill name order.
 
+User context may add or remove tags for installed skills without editing the
+skill files. This makes it possible to disable logging or supervision
+globally, or enable those behaviors only for specific tasks.
+
 `#use/<skill-name>` uses the canonical hyphenated skill name and does not
 install missing skills by itself.
 

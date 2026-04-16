@@ -11,6 +11,8 @@ The format is intentionally simple while the project remains a draft.
 - Added the `#run/last` tag so a skill can declare that it should run after
   other applicable skills, with deterministic ordering for multiple
   `#run/last` skills.
+- Clarified that user context may add or remove tags for installed skills,
+  including the `#run/*` tags, without editing the skill files.
 - Documented standardized description tags in the README, including
   `#run/always`, `#run/last`, and `#use/<skill-name>`, with a long-task
   example.

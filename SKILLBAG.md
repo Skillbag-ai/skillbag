@@ -146,6 +146,10 @@ Rules:
 
 - tags are part of the skill description text
 - tags MAY affect runtime behavior
+- user context MAY add or remove tags for any installed skill without editing
+  that skill's `SKILL.md`
+- such user-context tag overrides affect runtime behavior only and override the
+  skill's stored description tags
 - `#run/always` means the skill SHOULD always execute
 - `#run/always` MAY be disabled by user context
 - if not disabled, `#run/always` skills SHOULD run even when they are not
