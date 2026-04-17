@@ -1,16 +1,16 @@
-# SkillBag
+# 🎒 SkillBag
 
-SkillBag is a draft standard for defining, composing, installing, versioning,
-and running agent skills from files in a local workspace.
+SkillBag is an open standard for portable, composable AI agent behavioral
+specifications. Think of it as `.editorconfig` for agent skills: a file-based
+convention that makes agent behaviors version-controlled, reusable, and movable
+across providers and projects.
 
 It is loosely based on the per-skill format defined by
-[agentskills.io](https://agentskills.io/specification), but it is intended as
-an extension of that format rather than a replacement. The base skill format
-describes an individual skill. SkillBag adds the workspace-level structure
-needed to manage many skills together.
+[agentskills.io](https://agentskills.io/specification), extended to cover
+workspace-level concerns that individual skill files do not address.
 
 The standard is centered on a single entrypoint file, `SKILLBAG.md`. An agent
-that reads that file should be able to determine:
+that reads that file can determine:
 
 - which skills are available
 - where those skills come from
@@ -19,57 +19,33 @@ that reads that file should be able to determine:
 - how missing skills are installed
 - how skills are invoked at runtime
 
-In practice, SkillBag is meant to play a role similar to a package manager for
-skills. It does not try to be a general-purpose software package manager, but
-it does define a standardized architecture for an AI agent working directory:
-where skills live, how they are discovered, how they are versioned, how they
-are composed, and how they are installed.
+## Why This Exists
 
-This exists because single-skill formats are not enough for real workspaces.
-AI agents operating inside a local directory need project-level rules:
+Single-skill formats describe one skill. Real workspaces need answers to
+questions that span many skills:
 
 - Which skills are installed here?
 - Which skills are required for initial setup?
 - Where do skills come from?
 - How do local overrides interact with downloaded skills?
 - Which context files take precedence?
-- How can an agent discover skills cheaply without loading everything?
+- How can an agent discover skills without loading everything?
 
-SkillBag adds those workspace-level rules while staying compatible with a
-per-skill `SKILL.md` format.
+SkillBag adds those workspace-level rules while staying compatible with the
+per-skill `SKILL.md` format and staying provider-agnostic.
 
-It is especially useful for local-directory agent workflows, where the
-workspace itself should carry the instructions, structure, and dependency
-rules needed for reliable operation.
-
-It is also designed to keep the workspace provider-agnostic. Instead of
-relying only on proprietary skill systems defined inside a specific UI or app,
-the workspace can define its own portable skill architecture in files that
-live with the project. That makes skills easier to:
-
-- version
-- review
-- compose
-- reuse
-- move between agent providers
-- keep under source control
-
-The underlying idea is simple: agentic instructions and skills are a
-higher-level programming language. As in any programming language, structure
-and architecture matter. Once skills become reusable building blocks, the
-workspace needs explicit rules for layout, composition, installation, and
-override behavior.
+Skills are behavioral specifications, not guaranteed execution contracts.
+Execution quality depends on the agent interpreting them. SkillBag accepts this
+and provides conventions for detecting and correcting drift (see
+`skillbag-supervisor` in [skillbag-utils](https://github.com/Skillbag-ai/skillbag-utils))
+rather than pretending it does not happen.
 
 ## Status
 
-SkillBag is an active draft. The goal of this repository is to make the
-standard precise, minimal, and practical for file-based agent environments.
-
-The normative specification lives in [SKILLBAG.md](./SKILLBAG.md).
+SkillBag is an active draft. The normative specification lives in
+[SKILLBAG.md](./SKILLBAG.md).
 
 ## What SkillBag Standardizes
-
-At a high level, SkillBag standardizes:
 
 - a required `SKILLBAG.md` entrypoint
 - a `.skills/` directory containing installed skills
@@ -81,15 +57,12 @@ At a high level, SkillBag standardizes:
 - a canonical skill naming convention and a runtime invocation convention
 - bootstrap installation through the reserved `skillbag-get-skills` skill
 
-Taken together, these rules define a stable architecture for local AI-agent
-workspaces, not just a single skill file format.
-
 ## Core Concepts
 
 ### Entrypoint
 
-`SKILLBAG.md` is the project entrypoint. Agents should read it to understand
-the effective skill environment for a workspace.
+`SKILLBAG.md` is the workspace entrypoint. Agents read it to understand the
+effective skill environment.
 
 ### Skill Root
 
@@ -99,12 +72,9 @@ least `SKILL.md`.
 ### Skill Catalog
 
 `.skills/SKILLS.md` is the low-cost discovery surface for installed skills.
-Agents should read it first, then load only the specific `SKILL.md` files they
-need.
+Agents read it first, then load only the specific `SKILL.md` files they need.
 
 ### Context Files
-
-SkillBag supports:
 
 - `CONTEXT.md` for project-level context
 - `USER_CONTEXT.md` for user-local context
@@ -125,90 +95,94 @@ and their skills must conform to the standard.
 
 ### Versioning, Composability, and Reuse
 
-SkillBag is designed so skills can be treated as durable building blocks:
+Skills can be:
 
 - versioned through explicit `version` fields and source references
 - composed through dependency declarations
 - reused across multiple workspaces
-- adapted locally without losing the distinction between downloaded and local
-  behavior
+- adapted locally without losing the distinction between downloaded and local behavior
 
-This is one of the main advantages of a file-based, provider-agnostic approach.
+## Provider Shim Files
 
-## How SkillBag Is Used
+SkillBag is provider-agnostic. The specification and skills live in ordinary
+files that work with any agent. However, different agents use different
+filenames to discover workspace instructions:
 
-The expected workflow looks like this:
+| File | Agent |
+|---|---|
+| `AGENTS.md` | OpenAI Codex CLI, and others adopting this convention |
+| `CLAUDE.md` | Claude Code |
+| `.cursorrules` | Cursor |
+| `.github/copilot-instructions.md` | GitHub Copilot |
 
-1. Add `SKILLBAG.md` to the workspace.
-2. Optionally add `CONTEXT.md` with initial dependencies.
-3. Add instruction to execute `SKILLBAG.md` in your agent's context (in `AGENTS.md`, `CLAUDE.md`, or any other way defined by your agent).
-4. If needed, explicitly ask your agent to run installation instructions from `SKILLBAG.md`
+SkillBag uses `AGENTS.md` as its primary instruction file. Each other file is a
+one-line shim that redirects to it:
 
-This model is intended for local-directory agent workflows, where the agent is
-working against a real filesystem and the workspace itself should be the source
-of truth.
+```
+Read and follow instructions in AGENTS.md
+```
+
+This keeps provider-specific files trivially thin. All actual workspace rules
+live in `AGENTS.md`, which points agents to `SKILLBAG.md`. The skills
+themselves are fully provider-agnostic.
 
 ## Installation
 
-Simply copy the `SKILLBAG.md` into your project's root directory. Alternatively,
-fetch the latest and save it directly as `SKILLBAG.md`:
+**1.** Fetch `SKILLBAG.md` into your project root:
 
 ```bash
 curl -fsSL https://skillbag.md -o SKILLBAG.md
 ```
 
+**2.** Add one line to your `AGENTS.md`:
+
+```
+Read and execute SKILLBAG.md before any other work.
+```
+
+That's it. On the next agent session the agent reads the spec, installs
+`skillbag-get-skills`, processes any dependencies in `CONTEXT.md`, and keeps
+`.skills/SKILLS.md` in sync — all without further setup.
+
+Optionally declare skill dependencies in `CONTEXT.md`:
+
+```yaml
+dependencies:
+  - name: skillbag-supervisor
+    version: main
+    source: git@github.com:Skillbag-ai/skillbag-utils.git
+```
+
 ## Runtime Invocation
 
-Skill names are canonical and hyphenated, for example:
-
-- `convert-to-pdf`
-- `skillbag-get-skills`
-
-The runtime execution identifier replaces `-` with `_`. For example:
-
-- `run convert_to_pdf ...`
-- `run skillbag_get_skills ...`
-
-The canonical hyphenated name is still used in:
-
-- directory names
-- `SKILLS.md`
-- `SKILL.md`
-- dependency declarations
+Skill names are canonical and hyphenated (`convert-to-pdf`,
+`skillbag-get-skills`). The runtime execution identifier replaces `-` with `_`
+(`run convert_to_pdf`, `run skillbag_get_skills`). The canonical hyphenated
+name is still used in directory names, `SKILLS.md`, `SKILL.md`, and dependency
+declarations.
 
 ## Tags
 
 Skill descriptions may include standardized tags directly in the description
 text.
 
-Current tags:
+| Tag | Behavior |
+|---|---|
+| `#run/always` | Skill runs even when not explicitly requested, unless disabled by user context |
+| `#run/last` | Skill runs after all other applicable non-`#run/last` skills |
+| `#use/<skill-name>` | When this skill is used, the named companion skill should also be considered |
 
-- `#run/always`: the skill should run even when not explicitly requested,
-  unless user context disables it
-- `#run/last`: the skill should run after other applicable non-`#run/last`
-  skills and is useful for final validation or reporting
-- `#use/<skill-name>`: when the tagged skill is used, the named companion
-  skill should also be considered and used in combination if it is available
+If multiple `#run/last` skills apply, they run in ascending canonical name
+order.
 
-If multiple `#run/last` skills are applicable, they should run after other
-skills in ascending canonical skill name order.
-
-User context may add or remove tags for installed skills without editing the
-skill files. This makes it possible to disable logging or supervision
-globally, or enable those behaviors only for specific tasks.
-
-`#use/<skill-name>` uses the canonical hyphenated skill name and does not
-install missing skills by itself.
-
-Example: a transcription skill may include `#use/skillbag-long-task` so large
-batches such as hundreds of audio files are handled in continuation-sized
-chunks instead of one oversized response.
+User context may add or remove tags for installed skills without editing skill
+files, making it possible to disable supervision globally or enable it only for
+specific tasks.
 
 ## Repository Layout
 
-This repository contains the core specification and repository-level docs:
-
 - [SKILLBAG.md](./SKILLBAG.md): normative specification
+- [AGENTS.md](./AGENTS.md): agent instructions for this repository
 - [README.md](./README.md): project overview
 - [CONTRIBUTING.md](./CONTRIBUTING.md): contribution guide
 - [CODE_OF_CONDUCT.md](./CODE_OF_CONDUCT.md): community standards
@@ -220,7 +194,7 @@ This repository contains the core specification and repository-level docs:
 
 SkillBag does not attempt to standardize:
 
-- a general-purpose package manager for arbitrary software
+- a general-purpose software package manager
 - execution sandboxes or trust models for all agents
 - a universal skill body language beyond the compatible `SKILL.md` shape
 - hosted registries, publishing APIs, or release infrastructure
@@ -238,22 +212,14 @@ When evaluating changes to the standard, prefer:
 - portability across AI-agent providers
 - versionability, composability, and reusability of skills
 
-## Versioning
-
-This repository hosts a draft standard. Until a stable process is defined,
-changes may refine semantics substantially. Proposed changes should still aim
-for compatibility whenever practical.
-
 ## Contributing
 
 Contributions are welcome. Start with [CONTRIBUTING.md](./CONTRIBUTING.md).
 
 ## Security
 
-If you believe the specification enables a meaningful security issue, see
-[SECURITY.md](./SECURITY.md).
+See [SECURITY.md](./SECURITY.md).
 
 ## License
 
-This repository is licensed under the MIT License. See
-[LICENSE.md](./LICENSE.md).
+MIT. See [LICENSE.md](./LICENSE.md).

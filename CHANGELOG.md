@@ -4,6 +4,20 @@ All notable changes to this repository should be documented in this file.
 
 The format is intentionally simple while the project remains a draft.
 
+## v0.2.0
+
+- Added the `Lifecycle` section defining four explicit phases: Workspace Entry,
+  Installation, Refresh, and Pre-Response. Each phase specifies ordered,
+  normative steps that a conforming agent MUST follow.
+- Added skill conflict resolution rules to the `Resolution` section. Conflicts
+  resolve through: (1) conversation context, (2) `USER_CONTEXT.md` rules,
+  (3) `CONTEXT.md` rules, (4) alphabetical ascending canonical name order. If
+  the alphabetical fallback is ambiguous or high-risk, the agent MUST pause and
+  ask the user. Added `conflict-resolution` YAML syntax for declaring explicit
+  winners in `CONTEXT.md` or `USER_CONTEXT.md`.
+- Split the `Resolution` section into `Skill Conflicts` and `Dependency
+  Conflicts` subsections for clarity.
+
 ## v0.1.1
 
 - Added the `#use/<skill-name>` tag so a skill can declare another skill that
