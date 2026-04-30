@@ -185,6 +185,10 @@ specific tasks.
 - [AGENTS.md](./AGENTS.md): agent instructions for this repository
 - [README.md](./README.md): project overview
 - [CONTRIBUTING.md](./CONTRIBUTING.md): contribution guide
+- [GOVERNANCE.md](./GOVERNANCE.md): project governance and decision process
+- [CONFORMANCE.md](./CONFORMANCE.md): compatibility and future certification guidance
+- [ADOPTERS.md](./ADOPTERS.md): public adoption and support tracking
+- [SUSTAINABILITY.md](./SUSTAINABILITY.md): funding and sponsorship model
 - [CODE_OF_CONDUCT.md](./CODE_OF_CONDUCT.md): community standards
 - [SECURITY.md](./SECURITY.md): security disclosure guidance
 - [CHANGELOG.md](./CHANGELOG.md): human-readable change log
@@ -215,6 +219,8 @@ When evaluating changes to the standard, prefer:
 ## Contributing
 
 Contributions are welcome. Start with [CONTRIBUTING.md](./CONTRIBUTING.md).
+Project governance is described in [GOVERNANCE.md](./GOVERNANCE.md).
+Compatibility claims are described in [CONFORMANCE.md](./CONFORMANCE.md).
 
 ## Security
 
