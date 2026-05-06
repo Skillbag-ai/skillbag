@@ -55,6 +55,9 @@ Minimum requirements:
 - reads `SKILLBAG.md` before repository work when instructed
 - reads `CONTEXT.md` and `USER_CONTEXT.md` if present
 - applies the precedence order from `SKILLBAG.md`
+- resolves skill inputs from conversation values, context files, skill
+  defaults, and permitted discovery or inference as specified
+- validates required and conditional parameters before executing a skill
 - reads `.skills/SKILLS.md` before loading individual `SKILL.md` files
 - resolves skill names using canonical hyphenated names
 - maps hyphenated names to underscore execution identifiers only for invocation
@@ -104,4 +107,3 @@ the required SkillBag semantics.
 
 Extensions should be documented clearly and should not be presented as core
 SkillBag behavior unless they are added to `SKILLBAG.md`.
-

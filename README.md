@@ -16,6 +16,7 @@ that reads that file can determine:
 - where those skills come from
 - how skills depend on each other
 - which context files modify behavior
+- how task inputs and skill parameters are resolved
 - how missing skills are installed
 - how skills are invoked at runtime
 
@@ -29,6 +30,7 @@ questions that span many skills:
 - Where do skills come from?
 - How do local overrides interact with downloaded skills?
 - Which context files take precedence?
+- How are missing or ambiguous task inputs resolved?
 - How can an agent discover skills without loading everything?
 
 SkillBag adds those workspace-level rules while staying compatible with the
@@ -54,6 +56,8 @@ SkillBag is an active draft. The normative specification lives in
 - installation and validation rules for SkillBag sources
 - precedence across conversation context, user context, project context, and
   skill defaults
+- input resolution across conversation values, context files, discovered
+  values, and skill defaults
 - a canonical skill naming convention and a runtime invocation convention
 - bootstrap installation through the reserved `skillbag-get-skills` skill
 
@@ -80,6 +84,20 @@ Agents read it first, then load only the specific `SKILL.md` files they need.
 - `USER_CONTEXT.md` for user-local context
 
 These files can influence dependency installation and runtime behavior.
+
+### Input Resolution
+
+Skill parameters are resolved from the current conversation, user context,
+project context, and skill defaults. Agents may use filesystem discovery or
+indexes only to fill missing values when the result is clear enough to act on.
+Ambiguous, destructive, security-sensitive, externally visible, or hard to
+reverse actions require clarification before execution.
+
+Stable non-secret user values supplied in conversation, such as local folder
+paths or durable preferences, should be persisted to `USER_CONTEXT.md` when
+they are very likely to be useful beyond the current session. One-off task
+inputs, client data, temporary paths, URLs, pasted content, and secrets should
+not be persisted automatically.
 
 ### SkillBag Sources
 

@@ -1,4 +1,4 @@
-SkillBag v0.2.0
+SkillBag v0.3.0
 
 SkillBag defines how an agent discovers, installs, and applies workspace
 skills. MUST, SHOULD, and MAY are normative.
@@ -19,7 +19,49 @@ Highest to lowest: (1) current conversation, (2) `USER_CONTEXT.md`,
 (3) `CONTEXT.md`, (4) `SKILLBAG.md`, (5) skill defaults. Within one file,
 last explicit definition wins. Lower precedence MUST NOT override a
 higher-precedence prohibition. Conversation context MAY supply missing
-parameters but SHOULD NOT persist them automatically.
+parameters. Stable non-secret user preferences, local paths, or environment
+choices SHOULD be persisted to `USER_CONTEXT.md` when they are very likely to
+be needed beyond the current session, unless the user says not to.
+
+## Input Resolution
+
+Input resolution turns a user request, context files, and skill metadata into
+the effective parameter values used for a skill run. Agents MUST resolve inputs
+before executing a selected skill.
+
+For each parameter, resolve values in precedence order:
+
+1. Current conversation values, including explicit user values, direct file
+   paths, URLs, pasted content, selected options, or clarifications.
+2. `USER_CONTEXT.md` values, including user-local paths, preferences, and
+   non-secret environment choices.
+3. `CONTEXT.md` values, including project-level defaults, dependency
+   configuration, and repository policy.
+4. Skill defaults declared in `SKILL.md`.
+
+Filesystem discovery, index lookup, or inference MAY fill an otherwise missing
+value only when the selected skill permits it and the result is unambiguous
+enough to act on. Discovered or inferred values MUST NOT override a higher
+precedence value. If discovery returns multiple plausible values, a required
+value is missing, or the action is destructive, security-sensitive, externally
+visible, or hard to reverse, the agent MUST pause and ask for clarification
+before executing.
+
+Required parameters MUST have effective values before execution. Conditional
+requirements declared by a skill MUST be validated after defaults and context
+values are applied. If clarification supplies new values, the agent MUST
+re-run input resolution before continuing.
+
+Agents SHOULD report unclear or conflicting inputs as input-resolution
+problems, not as skill failures. Agents MUST NOT persist secrets automatically.
+Agents SHOULD persist stable non-secret values supplied in conversation to
+`USER_CONTEXT.md` when they are very likely to be needed beyond the current
+session, such as user-local folder paths, preferred tools, durable output
+locations, or recurring defaults. A skill MAY explicitly require or permit
+persistence for specific non-secret parameters. Agents SHOULD NOT persist
+one-off task inputs, client data, temporary paths, URLs, pasted content,
+derived analysis, or values whose future relevance is unclear unless the user
+explicitly asks.
 
 ## Skill Root
 
